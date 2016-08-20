@@ -25,8 +25,8 @@
         },
 
         regions: {
-            SubDropdown: '#subs-dropdown',
-            AudioDropdown: '#audio-dropdown'
+            SubDropdownRegion: '#subs-dropdown',
+            AudioDropdownRegion: '#audio-dropdown'
         },
 
         initialize: function () {
@@ -60,6 +60,7 @@
 
             var self = this;
             this.handleAnime();
+            this.loadSubtitles();
 
             var torrents = this.model.get('torrents');
             if (torrents['720p'] !== undefined && torrents['1080p'] !== undefined) {
@@ -91,7 +92,7 @@
             App.MovieDetailView = this;
 
             var audios = self.model.get('audios')
-            this.AudioDropdown.show (new App.View.LangDropdown({
+            this.AudioDropdown = new App.View.LangDropdown({
                 model: new App.Model.Lang({
                     type: 'audio',
                     title: _('Audio Language'),
@@ -99,9 +100,10 @@
                     values: audios || {en: undefined},
                     handler: self.switchAudio.bind(self)
                 })
-            }));
+            })
+            this.AudioDropdownRegion.show (this.AudioDropdown);
 
-            this.SubDropdown.show (new App.View.LangDropdown({
+            this.SubDropdown = new App.View.LangDropdown({
                 model: new App.Model.Lang({
                     type: 'sub',
                     title: _('Subtitle'),
@@ -109,7 +111,8 @@
                     values: objectAssign({}, {none: undefined}, self.model.get('subtitle')),
                     handler: self.switchSubtitle.bind(self),
                 })
-            }));
+            })
+            this.SubDropdownRegion.show (this.SubDropdown);
 
             var backgroundUrl = $('.backdrop').attr('data-bgr');
 
@@ -184,6 +187,26 @@
 
             $('.movie-imdb-link, .rating-container, .magnet-link, .health-icon').hide();
             $('.dot').css('opacity', 0);
+        },
+
+        loadSubtitles: function () {
+            console.warn(this.model.attributes);
+
+            var subProvider = App.Config.getProviderForType('subtitle');
+
+            console.warn(subProvider);
+            subProvider.fetch({
+                //filesize: '',
+                imdbid: this.model.attributes.imdb_id,
+                query: this.model.attributes.title
+            }).then(function (subs) {
+                if (subs && Object.keys(subs).length > 0) {
+                    win.info(Object.keys(subs).length + ' subtitles found');
+                    console.warn(subs);
+                } else {
+                    console.warn('No subtitles returned');
+                }
+            }).catch(console.warn.bind(console));
         },
 
         onDestroy: function () {
