@@ -41,7 +41,6 @@
     "butter-provider": "git+https://github.com/butterproviders/butter-provider",
     "butter-provider-archive": "git+https://github.com/butterproviders/butter-provider-archive",
     "butter-provider-ccc": "git+https://github.com/butterproviders/butter-provider-ccc",
-    "butter-provider-movies": "git+https://github.com/ChrisAlderson/butter-provider-movies",
     "butter-provider-vodo": "git+https://github.com/butterproviders/butter-provider-vodo",
     "butter-provider-youtube": "git+https://github.com/butterproviders/butter-provider-youtube",
     "chromecast-js": "git+https://github.com/captainyarr/chromecast-js.git",
